@@ -43,23 +43,16 @@ int main() {
 	//int nbytes = 
 	i = 0;
 	while (read(fd[0], &foo[i], 1)){
-		//foo[i] = &buf;
-		//printf("%s", &foo[i]);
-		if(buf[i] == '\n' || buf[i] == '\0'){
-			//printf("!");
+		
+		printf("%s", &foo[i]);
+		if ((foo[i] == '\n') || (foo[i] == '\0')){
 			strcpy(tmp, foo);
-			printf("%s", &tmp);
-			//printf("%s", &foo);
-			//ptr = strrchr(tmp,' ');
-			//if (ptr && *(ptr + 1))
-   			//printf("%s", ptr);
-			memset(foo, 0, sizeof(foo));
-			memset(tmp, 0, sizeof(tmp));
-			i = 0;
-			continue;
+		  ptr = strrchr(tmp, ' ');
+		  printf("%s\n", ptr+1);
 		}
 		i++;
 	}
+	printf("%s", foo);
 	//printf("Output: (%.*s)\n", nbytes, foo);
 		wait(NULL);
 		exit(EXIT_SUCCESS);
@@ -69,3 +62,4 @@ int main() {
   
   return 0;
 }
+
