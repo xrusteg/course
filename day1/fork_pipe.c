@@ -12,7 +12,8 @@ int main (){
 	char buf[256];
 
 	printf("Enter string for child:\n");
-	scanf("%s", buf);
+//	scanf("%s", buf);
+	read(0, buf, 256);
 
 	pipe(fd);
 
@@ -46,8 +47,8 @@ int main (){
 				exit(EXIT_FAILURE);
 			}
 			printf("%s\n", buf);
-			if (close(fd[1]) == -1){
-				printf("ERROR: %s\n", strerror(errno));
+			if (close(fd[0]) == -1){
+			printf("ERROR: %s\n", strerror(errno));
 				exit(EXIT_FAILURE);
 			}
 			wait(NULL);
