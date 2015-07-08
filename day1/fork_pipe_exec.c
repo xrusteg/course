@@ -6,8 +6,8 @@
 
 
 struct out {
-	char data[128];
-	char name[64];
+	char data[1024];
+	char name[1024];
 };
 
 struct out outs[32];
@@ -57,11 +57,13 @@ int main() {
 			strcpy(outs[j].data, tmp);
 //			printf("%s", outs[j].data);
 //			printf("%s", tmp);
-		  ptr = strrchr(tmp, ' ');
- 			strcpy(outs[j].name, ptr+1);
+		  //ptr = strrchr(tmp, ' ');
+		  //memset(outs[j].name, 0, sizeof(outs[j].name));
+ 			//strcpy(outs[j].name, ptr+1);
 //			printf("!%s", outs[j].name);
 //		  printf("%s", ptr+1);
 // 			printf("%s", tmp);
+			//strcpy(outs[j].data, tmp);
 			memset(foo, 0, sizeof(foo));
 			memset(tmp, 0, sizeof(tmp));
 			j++;
@@ -70,13 +72,37 @@ int main() {
 		}
 		i++;
 	}
+//				printf("%s", outs[2].name);
+	
 	n = j;
-	strcpy(temp, outs[1].data);
-  strcpy(outs[1].data, outs[2].data);
-  strcpy(outs[2].data, temp);
+	/*strcpy(temp, outs[1].data);
+	strcpy(outs[1].data, outs[2].data);
+  strcpy(outs[2].data, temp);*/
+	for (i = 0; i < n; i++)
+//			printf("%s", outs[i].data);
+			
+
+	for (i = 0; i < n; i++) {
+      for (j = 0; j < n - 1; j++) {
+	      if (strcmp((strrchr(outs[j].data, ' ')), strrchr(outs[j+1].data, ' ')) < 0) {
+	      	strcpy(temp, outs[j].data);
+					strcpy(outs[j].data, outs[j+1].data);
+          strcpy(outs[j+1].data, temp);
+         }
+       }
+  }
+	for (i = 0; i < n; i++)
+			printf("%s", outs[i].data);
+	
+	
+	
+	/*n = j;
+	strcpy(temp, outs[1].name);
+	strcpy(outs[1].name, outs[2].name);
+  strcpy(outs[2].name, temp);
 	printf("%d", strcmp(outs[1].name, outs[2].name));
   for (i = 0; i < n; i++)
-			printf("%s", outs[i].data);
+			printf("%s", outs[i].name);
 	n = j;
 	for (i = 0; i < n; i++) {
       for (j = 0; j < n - 1; j++) {
@@ -85,15 +111,15 @@ int main() {
          		strcpy(temp, outs[j].name);
             strcpy(outs[j].name, outs[j+1].name);
             strcpy(outs[j+1].name, temp);
-            for (k = 0; k < n; k++)
-						printf("%s", outs[k].data);
+  //          for (k = 0; k < n; k++)
+//						printf("%s", outs[k].data);
 						
          }
       }
    }
 
    for (i = 0; i < n; i++)
-			printf("%s", outs[i].name);
+			printf("%s", outs[i].name);*/
 //	printf("%d", strcmp(outs[0].name, outs[1].name));
 //	printf("%s", foo);
 	//printf("Output: (%.*s)\n", nbytes, foo);
