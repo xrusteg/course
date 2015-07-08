@@ -4,131 +4,79 @@
 #include <string.h>
 #include <errno.h>
 
+#define BUFF_SIZE 1024
+#define SIZE_STRS 32
 
 struct out {
-	char data[1024];
-	char name[1024];
+	char data[BUFF_SIZE];
 };
 
-struct out outs[32];
+struct out outs[SIZE_STRS];
 
-int main() {
-  int fd[2];
-  pid_t pid;
-  char foo[4096];
-  char buf[1];
-  char tmp[256];
-	char delim[] = "";
+int main(void)
+{
+	int fd[2];
+	pid_t pid;
+	char foo[4*BUFF_SIZE];
 	char *ptr;
-	char temp[64];
+	char temp[BUFF_SIZE];
 	int i, j, n, k;
-	struct out *ptrl;
-	
-  if (pipe(fd)==-1){
-  	printf("ERROR: %s\n", strerror(errno));
+
+	if (pipe(fd) == -1) {
+		printf("ERROR: %s\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
-  if ((pid = fork()) == -1){
+	pid = fork()
+	if (pid == -1) {
 			printf("ERROR: %s\n", strerror(errno));
 			exit(EXIT_FAILURE);
 	}
-  if(pid == 0) {
-
-    dup2 (fd[1], STDOUT_FILENO);
-    close(fd[0]);
-    close(fd[1]);
-    execl("/bin/ls", "ls", "-l", "/tmp", (char *)0);
-		printf("ERROR: %s\n", strerror(errno));
-		exit(EXIT_FAILURE);
-
-  } else {
-
-	close(fd[1]);
-	//int nbytes = 
-	i = 0;
-	j = 0;
-	while (read(fd[0], &foo[i], 1)){
-		
-//		printf("%s", &foo[i]);
-		if ((foo[i] == '\n') || (foo[i] == '\0')){
-			//ptrl = (struct out *) malloc(sizeof(struct out));
-			strcpy(tmp, foo);
-//			outs[j].data = tmp;
-			strcpy(outs[j].data, tmp);
-//			printf("%s", outs[j].data);
-//			printf("%s", tmp);
-		  //ptr = strrchr(tmp, ' ');
-		  //memset(outs[j].name, 0, sizeof(outs[j].name));
- 			//strcpy(outs[j].name, ptr+1);
-//			printf("!%s", outs[j].name);
-//		  printf("%s", ptr+1);
-// 			printf("%s", tmp);
-			//strcpy(outs[j].data, tmp);
-			memset(foo, 0, sizeof(foo));
-			memset(tmp, 0, sizeof(tmp));
-			j++;
-			i = 0;
-			continue;
+	if (pid == 0) {
+		close(fd[0]);
+		dup2(fd[1], 1);
+		dup2(fd[1], 2);
+		close(fd[1]);
+		if (execl("/bin/ls", "ls", "-l", "/tmp", (char *)0) == -1) {
+			printf("ERROR: %s\n", strerror(errno));
+			exit(EXIT_FAILURE);
 		}
-		i++;
-	}
-//				printf("%s", outs[2].name);
-	
-	n = j;
-	/*strcpy(temp, outs[1].data);
-	strcpy(outs[1].data, outs[2].data);
-  strcpy(outs[2].data, temp);*/
-	for (i = 0; i < n; i++)
-//			printf("%s", outs[i].data);
-			
+	} else {
+		close(fd[1]);
+		i = 0;
+		j = 0;
+		while (read(fd[0], &foo[i], 1)) {
+			if ((foo[i] == '\n') || (foo[i] == '\0')) {
+				strcpy(outs[j].data, foo);
+				memset(foo, 0, sizeof(foo));
+				j++;
+				i = 0;
+				continue;
+			}
+			i++;
+		}
 
-	for (i = 0; i < n; i++) {
-      for (j = 0; j < n - 1; j++) {
-	      if (strcmp((strrchr(outs[j].data, ' ')), strrchr(outs[j+1].data, ' ')) < 0) {
-	      	strcpy(temp, outs[j].data);
+		n = j;
+		/*strcpy(temp, outs[1].data);
+		strcpy(outs[1].data, outs[2].data); //exchange to test
+	  strcpy(outs[2].data, temp);
+		for (i = 0; i < n; i++)
+			printf("%s", outs[i].data);*/
+
+		for (i = 0; i < n; i++) {
+			for (j = 0; j < n - 1; j++) {
+	      if (strcmp((strrchr(outs[j].data, ' ')), strrchr(outs[j+1].data, ' ')) > 0) { //to sort desc: < 0
+					strcpy(temp, outs[j].data);
 					strcpy(outs[j].data, outs[j+1].data);
-          strcpy(outs[j+1].data, temp);
-         }
-       }
-  }
-	for (i = 0; i < n; i++)
+					strcpy(outs[j+1].data, temp);
+				}
+			}
+		}
+		for (i = 0; i < n; i++)
 			printf("%s", outs[i].data);
-	
-	
-	
-	/*n = j;
-	strcpy(temp, outs[1].name);
-	strcpy(outs[1].name, outs[2].name);
-  strcpy(outs[2].name, temp);
-	printf("%d", strcmp(outs[1].name, outs[2].name));
-  for (i = 0; i < n; i++)
-			printf("%s", outs[i].name);
-	n = j;
-	for (i = 0; i < n; i++) {
-      for (j = 0; j < n - 1; j++) {
-         if (strcmp(outs[j].name, outs[j+1].name) > 0) {
-         		printf("ERWR");
-         		strcpy(temp, outs[j].name);
-            strcpy(outs[j].name, outs[j+1].name);
-            strcpy(outs[j+1].name, temp);
-  //          for (k = 0; k < n; k++)
-//						printf("%s", outs[k].data);
-						
-         }
-      }
-   }
 
-   for (i = 0; i < n; i++)
-			printf("%s", outs[i].name);*/
-//	printf("%d", strcmp(outs[0].name, outs[1].name));
-//	printf("%s", foo);
-	//printf("Output: (%.*s)\n", nbytes, foo);
 		wait(NULL);
 		exit(EXIT_SUCCESS);
   }
-  
-
-  
-  return 0;
+  exit(EXIT_SUCCESS);
 }
 
