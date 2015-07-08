@@ -5,7 +5,8 @@
 #include <string.h>
 #include <errno.h>
 
-int main (){
+int main (void)
+{
 
 	int pid;
 	int fd[2];
@@ -17,37 +18,37 @@ int main (){
 
 	pipe(fd);
 
-	switch(pid = fork()){
+	switch (pid = fork()) {
 		case -1:
 			printf("ERROR: %s\n", strerror(errno));
 			exit(EXIT_FAILURE);
 		case 0:
 			printf("It's child, pid:%d\n", getpid());
-			if (close(fd[0]) == -1){
+			if (close(fd[0]) == -1) {
 				printf("ERROR: %s\n", strerror(errno));
 				exit(EXIT_FAILURE);
 			}
-			if (write(fd[1], &buf, strlen(buf)) == -1){
+			if (write(fd[1], &buf, strlen(buf)) == -1) {
 				printf("ERROR: %s\n", strerror(errno));
 				exit(EXIT_FAILURE);
 			}
-			if (close(fd[1]) == -1){
+			if (close(fd[1]) == -1) {
 				printf("ERROR: %s\n", strerror(errno));
 				exit(EXIT_FAILURE);
 			}
 			exit(EXIT_SUCCESS);
 		default:
 			printf("It's parent, pid %d\n", getpid());
-			if (close(fd[1]) == -1){
+			if (close(fd[1]) == -1) {
 				printf("ERROR: %s\n", strerror(errno));
 				exit(EXIT_FAILURE);
 			}
-			if (read(fd[0], &buf, strlen(buf)) == -1){
+			if (read(fd[0], &buf, strlen(buf)) == -1) {
 				printf("ERROR: %s\n", strerror(errno));
 				exit(EXIT_FAILURE);
 			}
 			printf("%s\n", buf);
-			if (close(fd[0]) == -1){
+			if (close(fd[0]) == -1) {
 			printf("ERROR: %s\n", strerror(errno));
 				exit(EXIT_FAILURE);
 			}
