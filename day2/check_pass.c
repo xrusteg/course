@@ -27,7 +27,7 @@ int main(void)
 
 	rc = pthread_create(&thread1, NULL, enter_pass, NULL);
 	if (rc) {
-		printf("ERROR: %s\n", strerror(errno));
+		printf("ERROR: %d\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 
