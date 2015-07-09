@@ -10,13 +10,14 @@ pthread_cond_t wake_up;
 pthread_mutex_t mut;
 void *enter_pass()
 {
+	printf("Enter password:\n");
 	while(1)
 	{
-		pthread_mutex_lock(&mut);
+		//pthread_mutex_lock(&mut);
 		printf("Enter password:\n");
 		scanf("%s", str);
 		pthread_cond_signal(&wake_up);
-		pthread_mutex_unlock(&mut);
+		//pthread_mutex_unlock(&mut);
 		pthread_cond_wait(&wake_up, &mut);
 	}
 }
@@ -42,13 +43,13 @@ int main(void)
 
 	rc = pthread_create(&thread1, NULL, enter_pass, NULL);
 	if (rc) {
-		printf("ERROR: %s\n", strerror(errno));
-		//exit(EXIT_FAILURE);
+		printf("ERROR: %d\n", strerror(errno));
+		exit(EXIT_FAILURE);
 	}
 	rc = pthread_create(&thread2, NULL, check_pass, NULL);
 	if (rc) {
-		printf("ERROR: %s\n", strerror(errno));
-		//exit(EXIT_FAILURE);
+		printf("ERROR: %d\n", strerror(errno));
+		exit(EXIT_FAILURE);
 	}
 
 	/*while(1)
