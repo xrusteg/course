@@ -59,7 +59,7 @@ int main()
 	{
 		pthread_join(threads[t], NULL);	
 	}
-	printf ("Main thread waited on all threads. Done.\n", NUM_THREADS);
+	printf ("Main thread waited on all threads. Done.\n");//, NUM_THREADS);
 	pthread_mutex_destroy(&count_mutex);
 	pthread_cond_destroy(&count_threshold_cv);
 	return 0;
