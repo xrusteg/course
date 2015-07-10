@@ -26,7 +26,7 @@ int main(void)
 		printf("ERROR: %s\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
-	pid = fork()
+	pid = fork();
 	if (pid == -1) {
 			printf("ERROR: %s\n", strerror(errno));
 			exit(EXIT_FAILURE);

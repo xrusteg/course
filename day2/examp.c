@@ -35,6 +35,7 @@ int main (int argc, char *argv[]) {
   }
 
   for(t = 0; t < NUM_THREADS; t++) {
+		printf("QWEWQE");
     pthread_join(threads[t], NULL);
     printf("Thread #%ld finished\n", t);
   }
